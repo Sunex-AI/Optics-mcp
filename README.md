@@ -59,6 +59,16 @@ npx wrangler deploy
 
 Public manifest: [`https://mcp.sunex-ai.com/.well-known/mcp.json`](https://mcp.sunex-ai.com/.well-known/mcp.json)
 
+## mcpServer Config block
+{
+  "mcpServers": {
+    "sunex-optics": {
+      "type": "sse",
+      "url": "https://mcp.sunex-ai.com/sse"
+    }
+  }
+}
+
 ## Contributing
 
 Issues and PRs welcome. For requests about the backend API (pricing, additional catalog fields, new endpoints), email [support@sunex.com](mailto:support@sunex.com).
