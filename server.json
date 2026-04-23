@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.sunex/optics-mcp",
+  "title": "Sunex Optics",
+  "description": "Search Sunex imager sensors and DSL lenses, match sensors to compatible lenses with FOV and angular resolution, and get sample pricing. No API key required.",
+  "websiteUrl": "https://sunex-ai.com",
+  "repository": {
+    "url": "https://github.com/sunex-ai/optics-mcp",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "remotes": [
+    {
+      "type": "sse",
+      "url": "https://mcp.sunex-ai.com/sse"
+    }
+  ]
+}
