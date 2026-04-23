@@ -1,4 +1,7 @@
 # Sunex Optics MCP Server
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![MCP](https://img.shields.io/badge/MCP-2024--11--05-2E5597.svg)](https://modelcontextprotocol.io)
+[![Deploy](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/Sunex-AI/Optics-mcp)
 
 A public [Model Context Protocol](https://modelcontextprotocol.io) server that lets AI assistants search [Sunex](https://www.optics-online.com)'s lens and imager catalog in natural language.
 
