@@ -1,20 +1,18 @@
 # Sunex Optics MCP Server
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![MCP](https://img.shields.io/badge/MCP-2024--11--05-2E5597.svg)](https://modelcontextprotocol.io)
-[![Deploy](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/Sunex-AI/Optics-mcp)
 
 A public [Model Context Protocol](https://modelcontextprotocol.io) server that lets AI assistants search [Sunex](https://www.optics-online.com)'s lens and imager catalog in natural language.
 
-**Live endpoint:** `https://mcp.sunex-ai.com/sse`
+**Live endpoint:** `https://mcp.sunex-ai.com/mcp`
 **Landing page:** [sunex-ai.com](https://sunex-ai.com)
+**Transport:** Streamable HTTP (MCP spec 2025-03-26). Legacy SSE endpoint at `/sse` preserved for older clients.
 
 ## Connect in 30 seconds
 
 ### Claude
-Settings → Connectors → Add custom connector → paste `https://mcp.sunex-ai.com/sse`
+Settings → Connectors → Add custom connector → paste `https://mcp.sunex-ai.com/mcp`
 
 ### Cursor / Continue / Zed
-Add to your MCP config with transport `sse` and the URL above.
+Add to your MCP config with transport `streamable-http` and the URL above.
 
 ### ChatGPT
 Via any MCP → OpenAPI bridge as a custom GPT Action.
@@ -43,31 +41,45 @@ Claude / Cursor / ChatGPT  →  mcp.sunex-ai.com  →  optics-online.com/api/v1
      (MCP client)         (Cloudflare Worker)      (ASP JSON API)
 ```
 
-Thin proxy on Cloudflare Workers (free tier) over Sunex's production catalog. SSE transport per MCP spec 2024-11-05. No auth, read-only.
+Thin proxy on Cloudflare Workers (free tier) over Sunex's production catalog. Streamable HTTP transport per MCP spec 2025-03-26 (with legacy SSE preserved). No auth, read-only.
+
+## Endpoints
+
+| Path | Purpose |
+|---|---|
+| `/mcp` | **Primary** — Streamable HTTP transport (current MCP standard) |
+| `/sse` | Legacy SSE transport, preserved for backward compatibility |
+| `/.well-known/mcp.json` | Public discovery manifest |
+| `/` | Landing page with install instructions |
 
 ## Self-host
 
 ```bash
-git clone https://github.com/sunex-ai/optics-mcp
-cd optics-mcp
+git clone https://github.com/Sunex-AI/Optics-mcp
+cd Optics-mcp
 npm install
 npx wrangler login
 npx wrangler deploy
 ```
 
+## Calling a tool directly (Python)
+
+```python
+from mcp import ClientSession
+from mcp.client.streamable_http import streamablehttp_client
+
+async with streamablehttp_client("https://mcp.sunex-ai.com/mcp") as (r, w, _):
+    async with ClientSession(r, w) as session:
+        await session.initialize()
+        result = await session.call_tool(
+            "recommend_lens_for_imager",
+            {"imagerPn": "IMX577", "fNumMax": 2.0}
+        )
+```
+
 ## Discovery
 
 Public manifest: [`https://mcp.sunex-ai.com/.well-known/mcp.json`](https://mcp.sunex-ai.com/.well-known/mcp.json)
-
-## mcpServer Config block
-{
-  "mcpServers": {
-    "sunex-optics": {
-      "type": "sse",
-      "url": "https://mcp.sunex-ai.com/sse"
-    }
-  }
-}
 
 ## Contributing
 
