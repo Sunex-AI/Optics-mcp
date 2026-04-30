@@ -3,7 +3,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 
 const API = "https://www.optics-online.com/api/v1";
-const CANONICAL_URL = "https://mcp.sunex-ai.com/sse";
+const CANONICAL_URL = "https://mcp.sunex-ai.com/mcp";
 
 const qs = (p: Record<string, unknown>) =>
   Object.entries(p)
@@ -160,7 +160,7 @@ const MANIFEST = {
   vendor: "Sunex Inc",
   homepage: "https://sunex-ai.com",
   contact_email: "support@sunex.com",
-  transport: "sse",
+  transport: "streamable-http",
   url: CANONICAL_URL,
   auth: { type: "none" },
   capabilities: { tools: true, resources: false, prompts: false },
@@ -172,10 +172,10 @@ const LANDING_HTML = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sunex AI &mdash; Lens & imager catalog for AI agents</title>
-<meta name="description" content="An MCP server that lets Claude, ChatGPT, Cursor and any MCP-compatible AI assistant search Sunex's lens and imager catalog in natural language.">
+<title>Sunex AI &mdash; Find best lens/CMOS sensor solutions for your imaging applications, directly from your AI chat apps</title>
+<meta name="description" content="A public MCP server that lets Claude, ChatGPT, Cursor and any MCP-compatible AI models direct access to our 350+ lens dataset utilizing our powerful Optics-Wizards&trade; tools to find the best lens/imager solutions for automotive, robotics, drone, medical and physical AI applications. Based in the U.S. and serving customers worldwide for 25 years, Sunex has shipped over 100M+ lenses and imaging solutions for mission-critical systems with unmatched reliability. ">
 <meta property="og:title" content="Sunex AI &mdash; Lens & imager catalog for AI agents">
-<meta property="og:description" content="Connect your AI assistant to Sunex's lens and imager catalog. Search, match sensors to lenses, and get sample pricing &mdash; all from a prompt.">
+<meta property="og:description" content="A public MCP server that lets Claude, ChatGPT, Cursor and any MCP-compatible AI models direct access to our 350+ lens dataset utilizing our powerful Optics-Wizards&trade; tools to find the best lens/imager solutions for automotive, robotics, drone, medical and physical AI applications. Based in the U.S. and serving customers worldwide for 25 years, Sunex has shipped over 100M+ lenses and imaging solutions for mission-critical systems with unmatched reliability. ">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://sunex-ai.com">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%232E5597'/%3E%3Ccircle cx='16' cy='16' r='5' fill='white'/%3E%3C/svg%3E">
@@ -309,8 +309,8 @@ footer .brand .logo-mark::after{width:8px;height:8px}
 <header class="hero">
   <div class="container hero-inner">
     <span class="eyebrow">Model Context Protocol &middot; Live</span>
-    <h1>Your AI assistant, connected to <span class="accent">Sunex lens &amp; imager catalog</span>.</h1>
-    <p class="sub">A public MCP server that lets Claude, ChatGPT, Cursor and any MCP-compatible AI agents search our 350+ lens catalog for automotive, robotics, drone, medical and physical AI applications. Based in the U.S. and serving customers worldwide for 25 years, Sunex has shipped over 100M+ lenses and imaging solutions for mission-critical systems with unmatched reliability. </p>
+    <h1>Find best lens/CMOS sensor solutions for your imaging applications, directly in AI chat apps</h1>
+    <p class="sub">A public MCP server that lets Claude, ChatGPT, Cursor and any MCP-compatible AI models direct access to our 350+ lens dataset utilizing our powerful Optics-Wizards&trade; tools to find the best lens/CMOS imager solutions for automotive, robotics, drone, medical and physical AI applications. Based in the U.S. and serving customers worldwide for 25 years, Sunex has shipped over 100M+ lenses and imaging solutions for mission-critical systems with unmatched reliability. </p>
     <div class="cta-row">
       <a href="#install" class="btn btn-primary">Connect in 30 seconds
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
@@ -392,7 +392,7 @@ footer .brand .logo-mark::after{width:8px;height:8px}
       <button onclick="copyUrl(this)">Copy URL</button>
     </div>
     <p style="font-size:13px;color:var(--ink-3);margin-bottom:40px">
-      This is the canonical MCP endpoint. <code style="background:var(--bg-2);padding:2px 6px;border-radius:4px;font-size:12px">https://sunex-ai.com/sse</code> also works.
+      This is the canonical MCP endpoint. <code style="background:var(--bg-2);padding:2px 6px;border-radius:4px;font-size:12px">https://sunex-ai.com/mcp</code> also works.
     </p>
     <div class="install-grid">
       <div class="install-card">
@@ -475,18 +475,18 @@ footer .brand .logo-mark::after{width:8px;height:8px}
     <p class="section-intro">A thin MCP server on Cloudflare Workers, proxying Sunex's live product database. Everything is public, documented, and auditable.</p>
     <div class="dev-row">
       <div>
-        <h3 style="margin-bottom:16px">Call a tool directly (MCP SSE)</h3>
+        <h3 style="margin-bottom:16px">Call a tool directly (Streamable HTTP)</h3>
 <pre class="code"><span class="c"># List available tools</span>
-<span class="k">curl</span> ${CANONICAL_URL}
+<span class="k">curl</span> -X POST ${CANONICAL_URL}
 
 <span class="c"># Inspect the public manifest</span>
 <span class="k">curl</span> https://mcp.sunex-ai.com/.well-known/mcp.json
 
 <span class="c"># From Python with the MCP SDK</span>
 <span class="k">from</span> mcp <span class="k">import</span> ClientSession
-<span class="k">from</span> mcp.client.sse <span class="k">import</span> sse_client
+<span class="k">from</span> mcp.client.streamable_http <span class="k">import</span> streamablehttp_client
 
-<span class="k">async with</span> sse_client(<span class="s">"${CANONICAL_URL}"</span>) <span class="k">as</span> (r, w):
+<span class="k">async with</span> streamablehttp_client(<span class="s">"${CANONICAL_URL}"</span>) <span class="k">as</span> (r, w, _):
     <span class="k">async with</span> ClientSession(r, w) <span class="k">as</span> session:
         <span class="k">await</span> session.initialize()
         result = <span class="k">await</span> session.call_tool(
@@ -497,7 +497,7 @@ footer .brand .logo-mark::after{width:8px;height:8px}
       <div>
         <h3 style="margin-bottom:16px">What's under the hood</h3>
         <ul class="dev-list">
-          <li><div><strong>Transport</strong><br><span>HTTP + Server-Sent Events (SSE) per MCP 2024-11-05 spec</span></div></li>
+          <li><div><strong>Transport</strong><br><span>Streamable HTTP per MCP 2025-03-26 spec (legacy SSE endpoint preserved)</span></div></li>
           <li><div><strong>Runtime</strong><br><span>Cloudflare Workers, global edge, free tier</span></div></li>
           <li><div><strong>Backend</strong><br><span>Sunex's production catalog at optics-online.com</span></div></li>
           <li><div><strong>Auth</strong><br><span>None &mdash; public read-only endpoint</span></div></li>
@@ -547,13 +547,13 @@ footer .brand .logo-mark::after{width:8px;height:8px}
 <footer>
   <div class="container">
     <div class="brand"><span class="logo-mark"></span><span>Sunex AI</span></div>
-    <div class="foot-links">
-      <a href="/.well-known/mcp.json">Manifest</a>
-      <a href="https://www.optics-online.com" target="_blank" rel="noopener">optics-online.com</a>
-      <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">About MCP</a>
-      <a href="mailto:support@sunex.com">Contact</a>
-    </div>
-  </div>
+<div class="foot-links">
+  <a href="https://github.com/Sunex-AI/Optics-mcp" target="_blank" rel="noopener">GitHub</a>
+  <a href="/.well-known/mcp.json">Manifest</a>
+  <a href="https://www.optics-online.com" target="_blank" rel="noopener">optics-online.com</a>
+  <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">About MCP</a>
+  <a href="mailto:support@sunex.com">Contact</a>
+</div>  </div>
   <div class="container" style="margin-top:24px;color:#6B7A90;font-size:13px">
     &copy; Sunex Inc. &middot; Optical systems for the AI era.
   </div>
@@ -578,14 +578,21 @@ function copyUrl(btn){
 export default {
   fetch(req: Request, env: unknown, ctx: ExecutionContext) {
     const url = new URL(req.url);
+    // Track mcp access log use npx wrangler tail
+    console.log(`${req.method} ${url.pathname} UA="${req.headers.get("user-agent")?.slice(0,80) || ""}"`);
+    // Streamable HTTP endpoint (current MCP spec, primary)
+    if (url.pathname === "/mcp" || url.pathname.startsWith("/mcp/")) {
+      // @ts-ignore
+      return OpticsMCP.serve("/mcp").fetch(req, env, ctx);
+    }
 
-    // SSE endpoint
+    // SSE endpoint (legacy MCP transport, kept for backward compat)
     if (url.pathname === "/sse" || url.pathname === "/sse/message") {
       // @ts-ignore
       return OpticsMCP.serveSSE("/sse").fetch(req, env, ctx);
     }
 
-    // Public manifest — canonical URL (always points to mcp.sunex-ai.com/sse)
+    // Public manifest — canonical URL (always points to mcp.sunex-ai.com/mcp)
     if (url.pathname === "/.well-known/mcp.json" || url.pathname === "/manifest.json") {
       return new Response(JSON.stringify(MANIFEST, null, 2), {
         headers: {
